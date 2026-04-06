@@ -1,0 +1,21 @@
+{
+    "register": {
+        "email": "eve.holt@reqres.in",
+        "password": "pistol"
+    },
+    "login": {
+        "email": "eve.holt@reqres.in",
+        "password": "cityslicka"
+    },
+    "newuser": {
+        "name": "Manorama Sahoo",
+        "job": "QA Engineer"
+    },
+    "fullupdate":{
+        "name": "Manorama Sahoo updated",
+        "job": "Seinior QA Engineer"
+    },
+    "partialupdate":{
+        "job":"Lead QA Engineer"
+    }
+}
