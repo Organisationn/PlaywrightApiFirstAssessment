@@ -54,6 +54,7 @@ jobs:
       run: npx playwright test
       env:
         BASE_URL_API_FIRST: ${{ secrets.BASE_URL_API_FIRST }}
+        API_KEY : ${{secrets.API_KEY}}
         DB_HOST: 127.0.0.1        # ✅ hardcoded - MySQL service runs on runner itself
         DB_PORT: 3306             # ✅ hardcoded
         DB_USER: root             # ✅ hardcoded
