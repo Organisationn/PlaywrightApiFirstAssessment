@@ -8,6 +8,20 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: testdata_db_api_first
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -17,11 +31,34 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+      # ✅ NEW - Seed MySQL with test data
+    - name: Seed MySQL test data
+      run: |
+        mysql -h 127.0.0.1 -P 3306 -u root --password="" testdata_db_api_first <<EOF
+        CREATE TABLE IF NOT EXISTS api_test_data (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          email VARCHAR(100) NOT NULL,
+          register_password VARCHAR(100) NOT NULL,
+          login_password VARCHAR(100) NOT NULL,
+          new_user_name VARCHAR(100) NOT NULL,
+          new_user_job VARCHAR(100) NOT NULL,
+          updated_name VARCHAR(100) NOT NULL,
+          updated_job VARCHAR(100) NOT NULL,
+          partial_job VARCHAR(100) NOT NULL,
+          created_at 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        INSERT INTO api_test_data (email,register_password,login_password,new_user_name,new_user_job,updated_name,updated_job,partial_job)
+        VALUES ('eve.holt@reqres.in','pistol','cityslicka','Manorama Sahoo','QA Engineer','Manorama Sahoo Updated','Senior QA Engineer','Lead QA Engineer');
+        EOF
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        BASE_URL_API_FIRST: ${{secrets.BASE_URL_API_FIRST}}
-        API_KEY: ${{secrets.API_KEY}}
+        BASE_URL_API_FIRST: ${{ secrets.BASE_URL_API_FIRST }}
+        DB_HOST: 127.0.0.1        # ✅ hardcoded - MySQL service runs on runner itself
+        DB_PORT: 3306             # ✅ hardcoded
+        DB_USER: root             # ✅ hardcoded
+        DB_PASSWORD: ''           # ✅ blank - no password set
+        DB_NAME_API: testdata_db_api_first  # ✅ hardcoded
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
