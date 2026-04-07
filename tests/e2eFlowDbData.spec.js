@@ -8,11 +8,11 @@ test.beforeEach(async ({request})=>{
     userData = await getUserTestData(1)
     apiHelper = new ApiHelper(request)
 })
-test('reqres e2e flow', async function({request}){
+test('reqres e2e flow', async ({request}) => {
     //Register
     const registerResp = await apiHelper.registerUser({
-        "email": userData.email,
-        "password": userData.register_password
+        email: userData.email,
+        password: userData.register_password
     })
     const registerJson = await registerResp.json()
     const token = registerJson.token
@@ -22,8 +22,8 @@ test('reqres e2e flow', async function({request}){
 
     // Login
     const loginResp = await apiHelper.loginUser({
-        "email": userData.email,
-        "password": userData.login_password
+        email: userData.email,
+        password: userData.login_password
     })
     const loginJson = await  loginResp.json()
     expect(loginResp.status()).toBe(200)
@@ -32,19 +32,19 @@ test('reqres e2e flow', async function({request}){
 
     //create a new user
     const createResp = await apiHelper.newUser({
-        "name": userData.new_user_name,
-        "job": userData.new_user_job
+        name: userData.new_user_name,
+        job: userData.new_user_job
     })
     const createJson = await createResp.json()
-    const userId = createJson.id
     expect(createResp.status()).toBe(201)
     expect(createJson.id).not.toBeNull()
+    const userId = createJson.id
     console.log(`User created | id: ${createJson.id}`)
 
     //Full update
     const putResp = await apiHelper.fullUpdateUserDetails({
-        "name": userData.updated_name,
-        "job": userData.updated_job
+        name: userData.updated_name,
+        job: userData.updated_job
     },userId)
     const putJson = await putResp.json()
     expect(putResp.status()).toBe(200)
@@ -54,7 +54,7 @@ test('reqres e2e flow', async function({request}){
 
     //partial update user details
     const patchResp = await apiHelper.partialUpdateUserDetails({
-        "job": userData.partial_job
+        job: userData.partial_job
     },userId)
     const patchJson = await patchResp.json()
     expect(patchResp.status()).toBe(200)
