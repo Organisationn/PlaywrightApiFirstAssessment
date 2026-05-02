@@ -8,7 +8,7 @@ test.beforeEach(({request})=>{
     userData = readJson('../testdata/userData.json')
     apiHelper = new ApiHelper(request)
 })
-test('reqres e2e flow', async function({request}){
+test('reqres e2e flow', async ({request}) => {
     //Register
     const registerResp = await apiHelper.registerUser(userData.register)
     const registerJson = await registerResp.json()

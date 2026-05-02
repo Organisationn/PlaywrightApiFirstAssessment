@@ -49,7 +49,7 @@ class ApiHelper {
         return response
     }
     async deleteUserDetails(id) {
-        console.log("Delete Headers:", process.env.API_KEY?"exist":NotExist)
+        console.log("Delete Headers:", process.env.API_KEY?"exist":"Not Exist")
         const response = await this.request.delete(`${process.env.BASE_URL_API_FIRST}/users/` + id,
             {
                 headers: { "x-api-key": process.env.API_KEY } || ''
